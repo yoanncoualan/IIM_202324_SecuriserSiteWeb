@@ -1,0 +1,30 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello ArticleController!{% endblock %}
+
+{% block body %}
+<h1>Articles</h1>
+
+{% for article in articles %}
+    <h3>
+        <a href="{{ path('app_article_show', {slug: article.slug}) }}">
+            {{ article.title|raw }}
+        </a>
+    </h3>
+    <p>{{ article.content|raw }}</p>
+
+    {% if is_granted('ROLE_USER') %}
+        <form action="{{path('app_article_delete', {id: article.id})}}" method="POST">
+            <input type="hidden" name="csrf" value="{{ csrf_token('delete' ~ article.id) }}">
+            <input type="submit" value="Supprimer">
+        </form>
+    {% endif %}
+
+{% else %}
+    <p>Aucun article</p>
+{% endfor %}
+
+<h2>Ajouter un article</h2>
+{{ form(ajout) }}
+
+{% endblock %}
